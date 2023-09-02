@@ -1,4 +1,4 @@
-using RoomBookingDependency.Core.Entities;
+using RoomBookingDependency.Core.Models;
 
 namespace RoomBookingDependency.Core.Commands;
 
