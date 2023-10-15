@@ -5,5 +5,5 @@ namespace RoomBookingDependency.Services.Contracts;
 
 public interface IPaymentService
 {
-    Task<PaymentResponse> Pay();
+    Task<PaymentResponse?> Pay(string email, string creditCardNumber);
 }
