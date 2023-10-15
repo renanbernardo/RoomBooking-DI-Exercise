@@ -1,12 +1,13 @@
 ﻿using RoomBookingDependency.Core.Models;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using RoomBookingDependency.Repositories.Contracts;
 
-namespace RoomBookingDependency;
+namespace RoomBookingDependency.Repositories;
 
 public class BookRepository : IBookRepository
 {
-    public async Task<Book?> GetByRoomAndDate(int roomId, DateTime date)
+    public async Task<Book?> GetByRoomAndDate(Guid roomId, DateTime date)
     {
         await using var connection = new SqlConnection();
         return await connection.QueryFirstOrDefaultAsync<Book?>(

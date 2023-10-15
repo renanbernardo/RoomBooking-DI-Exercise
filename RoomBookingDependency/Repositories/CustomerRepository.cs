@@ -1,8 +1,9 @@
 ﻿using RoomBookingDependency.Core.Models;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using RoomBookingDependency.Repositories.Contracts;
 
-namespace RoomBookingDependency;
+namespace RoomBookingDependency.Repositories;
 
 public class CustomerRepository : ICustomerRepository
 {

@@ -1,6 +1,6 @@
 ﻿using RoomBookingDependency.Core.Models;
 
-namespace RoomBookingDependency;
+namespace RoomBookingDependency.Repositories.Contracts;
 
 public interface ICustomerRepository
 {

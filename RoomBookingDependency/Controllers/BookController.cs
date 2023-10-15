@@ -1,47 +1,51 @@
-using Dapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Dapper;
-
+using RoomBookingDependency.Core.Commands;
+using RoomBookingDependency.Core.Models;
+using RoomBookingDependency.Repositories.Contracts;
+using RoomBookingDependency.Services.Contracts;
 
 namespace DependencyRoomBooking.Controllers;
 
 [ApiController]
 public class BookController : ControllerBase
 {
+    private readonly ICustomerRepository _customerRepository;
+    private readonly IBookRepository _bookRepository;
+    private readonly IPaymentService _paymentService;
+
+    public BookController(IPaymentService paymentService,
+    ICustomerRepository customerRepository,
+    IBookRepository bookRepository)
+    {
+        _paymentService = paymentService;
+        _customerRepository = customerRepository;
+        _bookRepository = bookRepository;
+    }
+
+
     public async Task<IActionResult> Book(BookRoomCommand command)
     {
-        // Recupera o usuário
-        
+        var customer = await _customerRepository.GetByEmail(command.Email);        
 
         if (customer == null)
             return NotFound();
 
-        // Verifica se a sala está disponível
-        
+        var room = await _bookRepository.GetByRoomAndDate(command.RoomId, command.Day);
 
-        // Se existe uma reserva, a sala está indisponível
         if (room is not null)
             return BadRequest();
 
-        // Tenta fazer um pagamento
-        
+        var pay = await _paymentService.Pay(command.Email, command.CreditCard.Number);
 
-        // Se a requisição não pode ser completa
-        if (response is null)
+        if (pay is null)
             return BadRequest();
 
-        // Se o status foi diferente de "pago"
-        if (response?.Status != "paid")
+        if (pay?.Status != "paid")
             return BadRequest();
 
-        // Cria a reserva
         var book = new Book(command.Email, command.RoomId, command.Day);
+        await _bookRepository.Save(book);
 
-        // Salva os dados
-        
-
-        // Retorna o número da reserva
         return Ok();
     }
 }
